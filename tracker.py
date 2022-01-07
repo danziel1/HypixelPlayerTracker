@@ -2,6 +2,8 @@ import requests
 import json
 import time
 
+# https://github.com/DanieL-69420/Hypixel-Stats-Tracker
+
 names = ['player1', 'player2', 'player 3'] # set to the names you want to track
 key = 'apikey' # set this to your api key [/api new]
 webhook = 'https://webhook' # set this to your webhook url
