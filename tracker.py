@@ -2,58 +2,97 @@ import requests
 import json
 import time
 
-names = ['player1', 'player2'] # set to the names you want to track
-key = 'key' # set this to your api key [/api new]
-webhook = 'webhookt url' # set this to your webhook url
+
+names = [
+'player1',
+'player2',
+'player3'
+] # set to the names you want to track
+key = 'api key' # set this to your api key [/api new]
+webhook = 'webhook url' # set this to your webhook url
 delay = 15 # seconds in delay between checking people's stats. This is to avoid rate limits (120 requests/min)!
 print("Starting")
 
 while True:
   for player in names:
-    getuuid = requests.get(f'https://api.mojang.com/users/profiles/minecraft/{player}').json()
-    uuid = getuuid['id']
+    time.sleep(1) # fixes error from spamming hypixel api
+    print(f"Checking {player}")
+    try:
+      getuuid = requests.get(f'https://api.mojang.com/users/profiles/minecraft/{player}').json()
+      uuid = getuuid['id']
+    except:
+      print(f"{player} doesn't seem to exist! Douple check your spelling.")
     params = {'key':key, 'uuid':uuid}
     getstats = requests.get('https://api.hypixel.net/player', params=params).json()
-    stats = getstats['player']['stats']['Duels']
-    
+    duels = getstats['player']['stats']['Duels']
+    bedwars = getstats['player']['stats']['Bedwars']
     # get current games played, set to 0 if haven't played yet
+    
+    # DUELS
     try:
-        played = str(stats['games_played_duels'])
+        duelsplayed = str(duels['games_played_duels'])
     except:
-        played = '0'
+        duelsplayed = '0'
     try:
-        classic = str(stats['classic_duel_rounds_played'])
+        classic = str(duels['classic_duel_rounds_played'])
     except:
-        classic = '0'
+        duelsclassic = '0'
     try:
-        sumo = str(stats['sumo_duel_rounds_played'])
+        duelssumo = str(duels['sumo_duel_rounds_played'])
     except:
-        sumo = '0'
+        duelssumo = '0'
     try:
-        sw = str(stats['sw_duel_rounds_played'])
+        duelssw = str(duels['sw_duel_rounds_played'])
     except:
-        sw = '0'
+        duelssw = '0'
     try:
-        bridge = str(stats['bridge_duel_rounds_played'])
+        duelsbridge = str(duels['bridge_duel_rounds_played'])
     except:
-        bridge = '0'
+        duelsbridge = '0'
     try:
-        boxing = str(stats['boxing_duel_rounds_played'])
+        duelsboxing = str(duels['boxing_duel_rounds_played'])
     except:
-        boxing = '0'
+        duelsboxing = '0'
     try:
-        op = str(stats['op_duel_rounds_played'])
+        duelsop = str(duels['op_duel_rounds_played'])
     except:
-        op = '0'
+        duelsop = '0'
     try:
-        uhc = str(stats['uhc_duel_rounds_played'])
+        duelsuhc = str(duels['uhc_duel_rounds_played'])
     except:
-        uhc = '0'
+        duelsuhc = '0'
     try:
-        parkour = str(stats['parkour_eight_rounds_played'])
+        duelsparkour = str(duels['parkour_eight_rounds_played'])
     except:
-        parkour = '0'
-    old = False
+        duelsparkour = '0'
+        
+        
+    # BEDWARS
+    try:
+        bwplayed = str(bedwars['games_played_bedwars'])
+    except:
+        bwplayed = '0'
+    try:
+        bwsolo = str(bedwars['eight_one_games_played_bedwars'])
+    except:
+        bwsolo = '0'
+    try:
+        bwdouble = str(bedwars['eight_two_games_played_bedwars'])
+    except:
+        bwdouble = '0'
+    try:
+        bwtripple = str(bedwars['four_three_games_played_bedwars'])
+    except:
+        bwtripple = '0'
+    try:
+        bwquad = str(bedwars['four_four_games_played_bedwars'])
+    except:
+        bwquad = '0'
+    try:
+        bwfourvfour = str(bedwars['two_four_games_played_bedwars'])
+    except:
+        bwfourvfour = '0'
+    stored = False
     
     try: # check if player is stored
         datafile = open(f'./data/{player}.json', 'r')
@@ -62,108 +101,124 @@ while True:
             datafile = open(f'./data/{player}.json', 'r')
             data = json.load(datafile)
             
-            oldplayed = data[player]['played']
-            oldclassic = data[player]['classic']
-            oldsumo = data[player]['sumo']
-            oldsw = data[player]['sw']
-            oldbridge = data[player]['bridge']
-            oldboxing = data[player]['boxing']
-            oldop = data[player]['op']
-            olduhc = data[player]['uhc']
-            oldparkour = data[player]['parkour']
-
+            oldduelsplayed = data[player]['duelsplayed']
+            oldduelsclassic = data[player]['duelsclassic']
+            oldduelssumo = data[player]['duelssumo']
+            oldduelssw = data[player]['duelssw']
+            oldduelsbridge = data[player]['duelsbridge']
+            oldduelsboxing = data[player]['duelsboxing']
+            oldduelsop = data[player]['duelsop']
+            oldduelsuhc = data[player]['duelsuhc']
+            oldduelsparkour = data[player]['duelsparkour']
+            
+            oldbwplayed = data[player]['bwplayed']
+            oldbwsolo = data[player]['bwsolo']
+            oldbwdouble = data[player]['bwdouble']
+            oldwbtripple = data[player]['bwtripple']
+            oldbwquad = data[player]['bwquad']
+            oldbwfourvfour = data[player]['bwfourvfour']
+            
+            
             datafile.close()
-            old = True
+            stored = True
         except Exception as e: # if you get an error here, please report it!
             print(e)
             
     except: # if player not stored > creates file
         datafile = open(f'./data/{player}.json', 'w')
-        dump = {player:{"played":played,"classic":classic,"sumo":sumo,"sw":sw,"bridge":bridge,"boxing":boxing,"op":op,"uhc":uhc,"parkour":parkour}}
+        dump = {player:{"duelsplayed":duelsplayed,"duelsclassic":classic,"duelssumo":duelssumo,"duelssw":duelssw,"duelsbridge":duelsbridge,"duelsboxing":duelsboxing,"duelsop":duelsop,"duelsuhc":duelsuhc,"duelsparkour":duelsparkour,"bwplayed":bwplayed,"bwsolo":bwsolo,"bwdouble":bwdouble,"bwtripple":bwtripple,"bwquad":bwquad,"bwfourvfour":bwfourvfour}}
         json.dump(dump, datafile)
         datafile.close()
+        print(f"Adding {player} to database.")
 
-    if old: # if player was stored > overrides data
+    if stored: # if player was stored > overrides data
         
-        if played > oldplayed:
+        if duelsplayed > oldduelsplayed:
             datafile = open(f'./data/{player}.json', 'w')
-            dump = {player:{"played":played,"classic":classic,"sumo":sumo,"sw":sw,"bridge":bridge,"boxing":boxing,"op":op,"uhc":uhc,"parkour":parkour}}
+            dump = {player:{"duelsplayed":duelsplayed,"duelsclassic":classic,"duelssumo":duelssumo,"duelssw":duelssw,"duelsbridge":duelsbridge,"duelsboxing":duelsboxing,"duelsop":duelsop,"duelsuhc":duelsuhc,"duelsparkour":duelsparkour,"bwplayed":bwplayed,"bwsolo":bwsolo,"bwdouble":bwdouble,"bwtripple":bwtripple,"bwquad":bwquad,"bwfourvfour":bwfourvfour}}
             json.dump(dump, datafile)
             datafile.close()
             
 
             
             # checks for what the new game was
-            if int(oldclassic) < int(classic):
-                mode = 'classic'
-                oldmodewins = oldclassic
+            if int(oldduelsclassic) < int(duelsclassic):
+                mode = 'Classic Duels'
+                oldmodewins = oldduelsclassic
                 newmodewins = classic
-                data = {
-                "content" : f"{player} is playing {mode}\n({oldmodewins} > {newmodewins})"
-                }
-                result = requests.post(webhook, json = data)
-            elif int(oldsumo) < int(sumo):
-                mode = 'sumo'
-                oldmodewins = oldsumo
-                newmodewins = sumo
-                data = {
-                "content" : f"{player} is playing {mode}\n({oldmodewins} > {newmodewins})"
-                }
-                result = requests.post(webhook, json = data)
-            elif int(oldsw) < int(sw):
-                mode = 'skywars'
-                oldmodewins = oldsw
-                newmodewins = sw
-                data = {
-                "content" : f"{player} is playing {mode}\n({oldmodewins} > {newmodewins})"
-                }
-                result = requests.post(webhook, json = data)
-            elif int(oldbridge) < int(bridge):
-                mode = 'bridge'
-                oldmodewins = oldbridge
-                newmodewins = bridge
-                data = {
-                "content" : f"{player} is playing {mode}\n({oldmodewins} > {newmodewins})"
-                }
-                result = requests.post(webhook, json = data)
-            elif int(oldboxing) < int(boxing):
-                mode = 'boxing'
-                oldmodewins = oldboxing
-                newmodewins = boxing
-                data = {
-                "content" : f"{player} is playing {mode}\n({oldmodewins} > {newmodewins})"
-                }
-                result = requests.post(webhook, json = data)
-            elif int(oldop) < int(op):
-                mode = 'op'
-                oldmodewins = oldop
-                newmodewins = op
-                data = {
-                "content" : f"{player} is playing {mode}\n({oldmodewins} > {newmodewins})"
-                }
-                result = requests.post(webhook, json = data)
-            elif int(olduhc) < int(uhc):
-                mode = 'uhc'
-                oldmodewins = olduhc
-                newmodewins = uhc
-                data = {
-                "content" : f"{player} is playing {mode}\n({oldmodewins} > {newmodewins})"
-                }
-                result = requests.post(webhook, json = data)
-            elif int(oldparkour) < int(parkour):
-                mode = 'parkour'
-                oldmodewins = oldparkour
-                newmodewins = parkour
-                data = {
-                "content" : f"{player} is playing {mode}.\n({oldmodewins} > {newmodewins})"
-                }
-                result = requests.post(webhook, json = data)
+            elif int(oldduelssumo) < int(duelssumo):
+                print("1")
+                mode = 'Sumo Duels'
+                oldmodewins = oldduelssumo
+                newmodewins = duelssumo
+            elif int(oldduelssw) < int(duelssw):
+                mode = 'Skywars Duels'
+                oldmodewins = oldduelssw
+                newmodewins = duelssw
+            elif int(oldduelsbridge) < int(duelsbridge):
+                mode = 'Bridge Duels'
+                oldmodewins = oldduelsbridge
+                newmodewins = duelsbridge
+            elif int(oldduelsboxing) < int(duelsboxing):
+                mode = 'Boxing Duels'
+                oldmodewins = oldduelsboxing
+                newmodewins = duelsboxing
+            elif int(oldduelsop) < int(duelsop):
+                mode = 'OP Duels'
+                oldmodewins = oldduelsop
+                newmodewins = duelsop
+            elif int(oldduelsuhc) < int(duelsuhc):
+                mode = 'UHC Duels'
+                oldmodewins = oldduelsuhc
+                newmodewins = duelsuhc
+            elif int(oldduelsparkour) < int(duelsparkour):
+                mode = 'Parkour Duels'
+                oldmodewins = oldduelsparkour
+                newmodewins = duelsparkour
+                
+        if bwplayed > oldbwplayed:
+            datafile = open(f'./data/{player}.json', 'w')
+            dump = {player:{"duelsplayed":duelsplayed,"duelsclassic":classic,"duelssumo":duelssumo,"duelssw":duelssw,"duelsbridge":duelsbridge,"duelsboxing":duelsboxing,"duelsop":duelsop,"duelsuhc":duelsuhc,"duelsparkour":duelsparkour,"bwplayed":bwplayed,"bwsolo":bwsolo,"bwdouble":bwdouble,"bwtripple":bwtripple,"bwquad":bwquad,"bwfourvfour":bwfourvfour}}
+            json.dump(dump, datafile)
+            datafile.close()    
+            # BEDWARS
+            if int(oldbwsolo) < int(bwsolo):
+                mode = 'Bedwars Solo'
+                oldmodewins = oldbwsolo
+                newmodewins = bwsolo
+            elif int(oldbwdouble) < int(bwdouble):
+                mode = 'Bedwars Doubles'
+                oldmodewins = oldbwdouble
+                newmodewins = bwdouble
+            elif int(oldwbtripple) < int(bwtripple):
+                mode = 'Bedwars Tripples'
+                oldmodewins = oldbwdouble
+                newmodewins = bwdouble
+            elif int(oldbwquad) < int(bwquad):
+                mode = 'Bedwars Quads'
+                oldmodewins = oldwbtripple
+                newmodewins = bwtripple
+
+            elif int(oldbwfourvfour) < int(bwfourvfour):
+                mode = 'Bedwars 4v4'
+                oldmodewins = oldbwfourvfour
+                newmodewins = bwfourvfour
             else:
-                print(f"{player} played an unknown duel REPORT THIS.") # if it shows this make a report on the github pls ;)
+                print(f"> {player} Unknown mode")
+                mode = 'UNKNOWN'
+                oldmodewins = 'UNKNOWN'
+                newmodewins = 'UNKNOWN'
+                pass
+            
+            # webhook send
+            data = {
+                "content" : f"{player} is playing {mode}\n({oldmodewins} > {newmodewins})"
+                }
+            result = requests.post(webhook, json = data)
 
 
         else: # if someone wasn't updated
             pass
         
-  print(f"Finished checking players!\nSleeping {delay} seconds.")
+  print(f"Finished checking {len(names)} players! Sleeping {delay} seconds.\n-----\n")
   time.sleep(delay)
