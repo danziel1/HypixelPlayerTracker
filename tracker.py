@@ -2,9 +2,9 @@ import requests
 import json
 import time
 
-names = ['player1','player2'] # set to the names you want to track
-key = 'api_key' # set this to your api key [/api new]
-webhook = 'https://webhook' # set this to your webhook url
+names = ['player1', 'player2'] # set to the names you want to track
+key = 'key' # set this to your api key [/api new]
+webhook = 'webhookt url' # set this to your webhook url
 delay = 15 # seconds in delay between checking people's stats. This is to avoid rate limits (120 requests/min)!
 print("Starting")
 
@@ -57,7 +57,6 @@ while True:
     
     try: # check if player is stored
         datafile = open(f'./data/{player}.json', 'r')
-        print(f"> Found {player} in database.")
         datafile.close()
         try: # gets old stats
             datafile = open(f'./data/{player}.json', 'r')
@@ -75,14 +74,14 @@ while True:
 
             datafile.close()
             old = True
-        except Exception as e:
+        except Exception as e: # if you get an error here, please report it!
             print(e)
             
     except: # if player not stored > creates file
         datafile = open(f'./data/{player}.json', 'w')
         dump = {player:{"played":played,"classic":classic,"sumo":sumo,"sw":sw,"bridge":bridge,"boxing":boxing,"op":op,"uhc":uhc,"parkour":parkour}}
         json.dump(dump, datafile)
-        print(f"> Adding {player} to database.")
+        datafile.close()
 
     if old: # if player was stored > overrides data
         
@@ -90,6 +89,7 @@ while True:
             datafile = open(f'./data/{player}.json', 'w')
             dump = {player:{"played":played,"classic":classic,"sumo":sumo,"sw":sw,"bridge":bridge,"boxing":boxing,"op":op,"uhc":uhc,"parkour":parkour}}
             json.dump(dump, datafile)
+            datafile.close()
             
 
             
@@ -98,60 +98,72 @@ while True:
                 mode = 'classic'
                 oldmodewins = oldclassic
                 newmodewins = classic
-                print(f"> {player} is playing classic duels. ({oldclassic} > {classic})")
+                data = {
+                "content" : f"{player} is playing {mode}\n({oldmodewins} > {newmodewins})"
+                }
+                result = requests.post(webhook, json = data)
             elif int(oldsumo) < int(sumo):
                 mode = 'sumo'
                 oldmodewins = oldsumo
                 newmodewins = sumo
-                print(f"> {player} is playing sumo duels. ({oldsumo} > {sumo})")
+                data = {
+                "content" : f"{player} is playing {mode}\n({oldmodewins} > {newmodewins})"
+                }
+                result = requests.post(webhook, json = data)
             elif int(oldsw) < int(sw):
                 mode = 'skywars'
                 oldmodewins = oldsw
                 newmodewins = sw
-                print(f"> {player} is playing sw duels. ({oldsw} > {sw})")
+                data = {
+                "content" : f"{player} is playing {mode}\n({oldmodewins} > {newmodewins})"
+                }
+                result = requests.post(webhook, json = data)
             elif int(oldbridge) < int(bridge):
                 mode = 'bridge'
                 oldmodewins = oldbridge
                 newmodewins = bridge
-                print(f"> {player} is playing bridge duels. ({oldbridge} > {bridge})")
+                data = {
+                "content" : f"{player} is playing {mode}\n({oldmodewins} > {newmodewins})"
+                }
+                result = requests.post(webhook, json = data)
             elif int(oldboxing) < int(boxing):
                 mode = 'boxing'
                 oldmodewins = oldboxing
                 newmodewins = boxing
-                print(f"> {player} is playing boxing duels. ({oldboxing} > {boxing})")
+                data = {
+                "content" : f"{player} is playing {mode}\n({oldmodewins} > {newmodewins})"
+                }
+                result = requests.post(webhook, json = data)
             elif int(oldop) < int(op):
                 mode = 'op'
                 oldmodewins = oldop
                 newmodewins = op
-                print(f"> {player} is playing op duels. ({oldop} > {op})")
+                data = {
+                "content" : f"{player} is playing {mode}\n({oldmodewins} > {newmodewins})"
+                }
+                result = requests.post(webhook, json = data)
             elif int(olduhc) < int(uhc):
                 mode = 'uhc'
                 oldmodewins = olduhc
                 newmodewins = uhc
-                print(f"> {player} is playing uhc duels. ({olduhc} > {uhc})")
+                data = {
+                "content" : f"{player} is playing {mode}\n({oldmodewins} > {newmodewins})"
+                }
+                result = requests.post(webhook, json = data)
             elif int(oldparkour) < int(parkour):
                 mode = 'parkour'
                 oldmodewins = oldparkour
                 newmodewins = parkour
-                print(f"> {player} is playing parkour duels. ({oldparkour} > {parkour})")
-            else:
-                print(f"{player} played an unknown duel.") # if it shows this make a report on the github pls ;)
-
-            # sets up the webhooks
-            data = {
-                "content" : f"{player} is playing {mode}\n({oldmodewins} > {newmodewins})"
+                data = {
+                "content" : f"{player} is playing {mode}.\n({oldmodewins} > {newmodewins})"
                 }
-            result = requests.post(webhook, json = data)
-
-            try:
-                result.raise_for_status()
-            except requests.exceptions.HTTPError as err:
-                print(err)
+                result = requests.post(webhook, json = data)
             else:
-                print("Payload delivered successfully, code {}.".format(result.status_code))
+                print(f"{player} played an unknown duel REPORT THIS.") # if it shows this make a report on the github pls ;)
 
-        else:
-            print(f"> {player} isn't playing.")
-    print("-----\n")
-  print(f"Sleeping {delay} seconds.")
+
+        else: # if someone wasn't updated
+            pass
+        
+  print(f"Finished checking players!\nSleeping {delay} seconds.")
   time.sleep(delay)
