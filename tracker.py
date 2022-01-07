@@ -2,9 +2,9 @@ import requests
 import json
 import time
 
-names = ['swqs', 'ravezar', 'kinda_epic', 'tokiq', 'onght', 'nobypass', 'bramthebest', 'aefnur', 'mr0gan', 'immixtyy'] # set to the names you want to track
-key = '42d04ffd-e78e-481e-9846-20454a1ac119' # set this to your api key [/api new]
-webhook = 'https://discord.com/api/webhooks/928832765896572928/1NLpUwDT8g9Cln8SooOeQJFGVxTMsA1q7ZNa0z0slKognJ5XXXlKG90BFqANF40DTLMc' # set this to your webhook url
+names = ['player1','player2'] # set to the names you want to track
+key = 'api_key' # set this to your api key [/api new]
+webhook = 'https://webhook' # set this to your webhook url
 delay = 15 # seconds in delay between checking people's stats. This is to avoid rate limits (120 requests/min)!
 print("Starting")
 
