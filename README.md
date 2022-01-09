@@ -1,16 +1,16 @@
-# Hypixel Stats Tracker
+# HYPIXEL STATS TRACKER
 #### Track player's stats, find out when they're online and playing games!
 
-## INFO
-![image](https://user-images.githubusercontent.com/93354347/148614711-0d048676-b528-4c0c-9157-2f7d00772c12.png)
+## PREVIEW
+![image](https://user-images.githubusercontent.com/93354347/148668062-260580b2-92bf-4a3f-ae85-de013c4c039a.png)
 #### Showcase Server: https://discord.gg/yY5qQHPar6
 
 
-## Supported modes
+## MODES
 ##### Bedwars
 ##### Duels
 
-## To Do
+## TO DO
 ##### Add Bedwars dream modes
 ##### Skywars
-##### Pit (I might not do this)
+##### Pit (maybe)
