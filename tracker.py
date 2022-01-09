@@ -5,11 +5,11 @@ import time
 
 names = [
 'player1',
-'player2',
+'player2'
 'player3'
 ]# set to the names you want to track
-key = 'apikey' # set this to your api key [/api new]
-webhook = 'webhook' # set this to your webhook url
+key = 'API Key' # set this to your api key [/api new]
+webhook = 'WEBHOOK' # set this to your webhook url
 delay = len(names)+1 # seconds in delay between checking people's stats. This is to avoid rate limits (120 requests/min)!
 
 print("Starting")
