@@ -1,4 +1,4 @@
-# HYPIXEL STATS TRACKER
+# HYPIXEL PLAYER TRACKER
 #### Track player's stats, find out when they're online and playing games!
 
 ## PREVIEW
