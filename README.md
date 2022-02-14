@@ -3,7 +3,7 @@
 
 ## PREVIEW
 ![image](https://user-images.githubusercontent.com/93354347/148703957-e90095af-cf00-4490-b254-8b13d61084ad.png)
-#### Showcase Server: https://discord.gg/yY5qQHPar6
+#### Showcase Server: https://discord.gg/CMGybctzkr
 
 
 ## MODES
